@@ -26,7 +26,8 @@ int getWord() {
 // int getWord(Node* node) {
     char ch;
     printf("enter loop\n");
-    while (scanf("%c", &ch) != EOF) {
+    while (!feof(stdin)) {
+        ch = fgetc(stdin);
         if (ch >= 'a' && ch <= 'z') {
             // node = insertChar(node, ch);
             printf("%c\n", ch);
