@@ -22,27 +22,22 @@ Node* insertChar(Node* node, char ch) {
     return node->children[ch - 'a'];
 }
 
-int getWord() {
-// int getWord(Node* node) {
+void getWords(Node** head) {
+    Node* node = *head;
     char ch;
     printf("enter loop\n");
     while (!feof(stdin)) {
         ch = fgetc(stdin);
         if (ch >= 'a' && ch <= 'z') {
-            // node = insertChar(node, ch);
-            printf("%c\n", ch);
+            node = insertChar(node, ch);
         } else if (ch >= 'A' && ch <= 'z') {
-            // ch += 'a' - 'A';
-            // node = insertChar(node, ch);
-            printf("%c\n", ch);
-        } else if (ch == ' ') {
-            // node->count++;
-            printf("%c\n", ch);
-            // printf("exit loop\n");
-            // return TRUE;
+            ch += 'a' - 'A';
+            node = insertChar(node, ch);
+        } else if (ch == ' ' || ch == EOF) {
+            node->count++;
+            node = *head;
         }
     }
-    return FALSE;
 }
 
 // void printTrie(Node *node) {
@@ -57,9 +52,12 @@ int getWord() {
 // }
 
 int main() {
-    // Node* head = newNode('\0');
+    Node* head = newNode('\0');
     // while (getWord());
-    getWord();
+    getWords(&head);
+    printf("aa: %lu\n", head->children[0]->children[0]->count);
+    printf("aaa: %lu\n", head->children[0]->children[0]->children[0]->count);
+    printf("aba: %lu\n", head->children[0]->children[1]->children[0]->count);
     // insertChar(head, 'g');
     // printf("%c\n", head->children['g' - 'a']->letter);
     return 0;
