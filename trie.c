@@ -30,7 +30,7 @@ void getWords(Node** head) {
         ch = fgetc(stdin);
         if (ch >= 'a' && ch <= 'z') {
             node = insertChar(node, ch);
-        } else if (ch >= 'A' && ch <= 'z') {
+        } else if (ch >= 'A' && ch <= 'Z') {
             ch += 'a' - 'A';
             node = insertChar(node, ch);
         } else if (ch == ' ' || ch == EOF) {
