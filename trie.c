@@ -1,7 +1,15 @@
-#include "trie.h"
-
 #include <stdio.h>
 #include <stdlib.h>
+#define NUM_LETTERS 26
+
+typedef enum { FALSE = 0,
+               TRUE = 1 } boolean;
+
+typedef struct Node {
+    char letter;
+    long unsigned int count;
+    struct Node* children[NUM_LETTERS];
+} Node;
 
 Node* newNode(char ch) {
     Node* node = (Node*)malloc(sizeof(Node));
@@ -33,7 +41,7 @@ void getWords(Node** head) {
         } else if (ch >= 'A' && ch <= 'Z') {
             ch += 'a' - 'A';
             node = insertChar(node, ch);
-        } else if (ch == ' ' || ch == EOF) {
+        } else if (ch == ' ' || ch == '\t' || ch == EOF) {
             node->count++;
             node = *head;
         }

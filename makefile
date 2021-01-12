@@ -5,13 +5,10 @@ OBJECTS_TRIE=trie.o
 
 all: frequency
 
-frequency: $(OBJECTS_TRIE) trie.a
-	$(CC) $(FLAGS) -o trie $(OBJECTS_TRIE) trie.a
+frequency: $(OBJECTS_TRIE)
+	$(CC) $(FLAGS) -o frequency $(OBJECTS_TRIE)
 
-trie.a: $(OBJECTS_TRIE)
-	$(AR) -rcs trie.a $(OBJECTS_TRIE)
-
-trie.o: trie.c trie.h
+trie.o: trie.c
 	$(CC) $(FLAGS) -c trie.c
 
 clean:
