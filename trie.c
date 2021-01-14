@@ -83,21 +83,21 @@ void printTrie(Node** head){
 }
 */
 
-void printSubtree(Node* head) {
-    Node* curr = head;
+void printSubtree(Node** head) {
+    Node* curr = *head;
     int i;
-    while (head != NULL)
+    while (*head != NULL)
     {
         if (curr->count>0)
                 {
-                    printf( "%c %d\n",curr->letter, curr->count);
+                    printf( "%c %d\n", curr->letter, curr->count);
                     curr-> count =0;
                     curr = head;
                 }
         else if(!haveChildren(curr)){
             free(curr);
-            curr= NULL;
-           // curr = head;
+            *curr= NULL;
+            curr = head;
         }
         else 
         {
