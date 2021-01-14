@@ -7,7 +7,7 @@ typedef enum { FALSE = 0,
 
 typedef struct Node {
     char letter;
-    long unsigned int count;
+    unsigned int count;
     struct Node* children[NUM_LETTERS];
 } Node;
 
@@ -48,7 +48,104 @@ void getWords(Node** head) {
     }
 }
 
-// void printTrie(Node *node) {
+// returns TRUE if given node has any children
+int haveChildren(Node* curr)
+{
+    for (int i = 0; i < NUM_LETTERS; i++)
+        if (curr->children[i])
+            return TRUE;
+ 
+    return FALSE;
+}
+/*
+void printTrie(Node** head, Node** curr){
+    Node* curr = *curr;
+    printf("%c", node->letter);
+    if(node->count != 0){
+        printf(" %d", node->count);
+        node->count = 0;
+        printTrie(head,head);
+    }
+    for(int i= 0; i<NUM_LETTERS; i++){
+        if(node->count != 0)
+        
+        if(node->children[i] != NULL){
+            printTrie()
+        }
+    }
+
+void printTrie(Node** head){
+        Node* curr = *head;
+        while( !haveChildren(*head)){
+            curr->
+        }
+
+}
+*/
+
+void printSubtree(Node* head) {
+    Node* curr = head;
+    while (head != NULL)
+    {
+        if(haveChildren(curr)){
+             for (int i = 0; i < NUM_LETTERS; i++)
+            {
+                if (curr->count>0)
+                {
+                    printf( "%c %d\n ",curr->letter, curr->count);
+                    curr-> count =0;
+                    curr = head;
+                    break;
+                }
+                else if (curr->children[i] != NULL)
+                {
+                    printf("%c", curr->letter);
+                    curr= curr->children[i];
+                    i=0;
+                }
+            }
+        }
+        else 
+        {
+            if (curr->count>0)
+            {
+                printf( "%c %d\n ",curr->letter, curr->count);
+                curr-> count =0;
+            }
+            free(curr);
+            curr=NULL;
+            curr = head;
+        }
+    }
+}   
+/*
+void printSubtree1(Node* head ,Node* curr, int index) {
+
+    if (curr == NULL){
+        return;
+        }
+
+    printf("%c", curr->letter);
+
+    if (curr->count != 0) {     
+        printf( " %d\n ", curr->count);
+        curr = head;
+        }
+
+    for (int i = 0; i<26;i++) {    
+        if (curr->children[i]!= NULL) {   
+            printSubtree( head ,curr->children[i], index +1);
+            curr->children[i]= NULL;
+           // free(curr->children[i]);
+        }           
+    }
+
+               
+ }
+*/
+// }
+    
+    // void printTrie(Node *node) {
 //     // Node* node = head;
 //     while (node != NULL) {
 //         printf("%c, %lu\n", node->letter, node->count);
@@ -58,14 +155,15 @@ void getWords(Node** head) {
 //         }
 //     }
 // }
-
 int main() {
     Node* head = newNode('\0');
     // while (getWord());
     getWords(&head);
-    printf("aa: %lu\n", head->children[0]->children[0]->count);
-    printf("aaa: %lu\n", head->children[0]->children[0]->children[0]->count);
-    printf("aba: %lu\n", head->children[0]->children[1]->children[0]->count);
+    printf("checkkkkk");
+    printSubtree( head);
+    printf("aa: %u\n", head->children[0]->children[0]->count);
+    printf("aaa: %u\n", head->children[0]->children[0]->children[0]->count);
+    printf("aba: %u\n", head->children[0]->children[1]->children[0]->count);
     // insertChar(head, 'g');
     // printf("%c\n", head->children['g' - 'a']->letter);
     return 0;
