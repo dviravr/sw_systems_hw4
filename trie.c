@@ -85,17 +85,45 @@ void printTrie(Node** head){
 
 void printSubtree(Node* head) {
     Node* curr = head;
+    int i;
     while (head != NULL)
     {
-        if(haveChildren(curr)){
-             for (int i = 0; i < NUM_LETTERS; i++)
+        if (curr->count>0)
+                {
+                    printf( "%c %d\n",curr->letter, curr->count);
+                    curr-> count =0;
+                    curr = head;
+                }
+        else if(!haveChildren(curr)){
+            free(curr);
+            curr= NULL;
+           // curr = head;
+        }
+        else 
+        {
+            for (i = 0; i < NUM_LETTERS; i++)
+            {
+                if (curr->children[i] != NULL)
+                {
+                    if (curr !=head)
+                    {
+                    printf("%c", curr->letter);
+                    }
+                    curr= curr->children[i];
+                    i=NUM_LETTERS;
+                }
+            }
+
+        }
+            /*
+            for (i = 0; i < NUM_LETTERS; i++)
             {
                 if (curr->count>0)
                 {
                     printf( "%c %d\n ",curr->letter, curr->count);
                     curr-> count =0;
                     curr = head;
-                    break;
+                    i=NUM_LETTERS;
                 }
                 else if (curr->children[i] != NULL)
                 {
@@ -115,7 +143,7 @@ void printSubtree(Node* head) {
             free(curr);
             curr=NULL;
             curr = head;
-        }
+        }*/
     }
 }   
 /*
@@ -125,16 +153,27 @@ void printSubtree1(Node* head ,Node* curr, int index) {
         return;
         }
 
+    if (curr->count != 0) {     
+        printf( "%c %d\n", curr->letter ,curr->count);
+        curr-> count =0;
+        printSubtree1(head,head,0);
+    }
+     
+    if(!haveChildren(curr))
+    {
+        curr 
+    }
+
     printf("%c", curr->letter);
 
-    if (curr->count != 0) {     
-        printf( " %d\n ", curr->count);
+    if (curr -> count != 0) {     
+        printf(" %d\n", curr->count);
         curr = head;
         }
 
     for (int i = 0; i<26;i++) {    
         if (curr->children[i]!= NULL) {   
-            printSubtree( head ,curr->children[i], index +1);
+            printSubtree1( head , curr->children[i], index +1);
             curr->children[i]= NULL;
            // free(curr->children[i]);
         }           
@@ -159,7 +198,6 @@ int main() {
     Node* head = newNode('\0');
     // while (getWord());
     getWords(&head);
-    printf("checkkkkk");
     printSubtree( head);
     printf("aa: %u\n", head->children[0]->children[0]->count);
     printf("aaa: %u\n", head->children[0]->children[0]->children[0]->count);
