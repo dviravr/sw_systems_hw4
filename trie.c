@@ -75,8 +75,6 @@ void printSubtree(Node* head) {
     int i;
     while (head != NULL) {
         if (curr->count > 0) {
-            if (curr == head) 
-                puts("shouldn't be here");
             printf("%c %d\n", curr->letter, curr->count);
             curr->count = 0;
             if (!haveChildren(curr)) {
@@ -98,6 +96,7 @@ void printSubtree(Node* head) {
             }
         }
         if (!haveChildren(head)) {
+            // finish print all the words
             break;
         }
     }
