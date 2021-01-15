@@ -5,51 +5,64 @@
 typedef enum { FALSE = 0,
                TRUE = 1 } boolean;
 
+/*
+    this is a definition of a node.
+    every node have letter, words counter, Node parent, and array of 26(num of letters) children.  */
 typedef struct Node {
     char letter;
     unsigned int count;
-    struct Node* father;
+    struct Node* parent;
     struct Node* children[NUM_LETTERS];
 } Node;
 
-Node* newNode(char ch, Node* father) {
+/*  create new node with a given char and his parent. 
+    return a pointer to the new node.  */
+Node* newNode(char ch, Node* parent) {
     Node* node = (Node*)malloc(sizeof(Node));
     node->letter = ch;
     node->count = 0;
-    node->father = father;
+    node->parent = parent;
+    // set all children to null.
     for (size_t i = 0; i < NUM_LETTERS; i++) {
         node->children[i] = NULL;
     }
     return node;
 }
 
+/*  insert new letter to the tree. return pointer to the next node.  */
 Node* insertChar(Node* node, char ch) {
-    if (node->children[ch - 'a'] == NULL) {
-        node->children[ch - 'a'] = newNode(ch, node);
+    int index = ch - 'a';
+    // if the current child is null create a new node.
+    if (node->children[index] == NULL) {
+        node->children[index] = newNode(ch, node);
     } else {
-        node->children[ch - 'a']->letter = ch;
+        node->children[index]->letter = ch;
     }
-    return node->children[ch - 'a'];
+    return node->children[index];
 }
 
+/*  get all the words from the user.  */
 void getWords(Node** head) {
     Node* node = *head;
     char ch;
     while (!feof(stdin)) {
+        // get letter by letter whlie there is an input.
         ch = fgetc(stdin);
+        // insert the letter to the tree in lowercase.
         if (ch >= 'a' && ch <= 'z') {
             node = insertChar(node, ch);
         } else if (ch >= 'A' && ch <= 'Z') {
             ch += 'a' - 'A';
             node = insertChar(node, ch);
         } else if ((ch == ' ' || ch == '\t' || ch == '\n' || ch == EOF) && node != *head) {
+            // if the word was ended count the word and return to the head of the tree to get more words.
             node->count++;
             node = *head;
         }
     }
 }
 
-// returns TRUE if given node has any children
+/*  returns TRUE if given node has any children.  */
 int haveChildren(Node* curr) {
     for (int i = 0; i < NUM_LETTERS; i++)
         if (curr->children[i] != NULL)
@@ -57,16 +70,20 @@ int haveChildren(Node* curr) {
     return FALSE;
 }
 
-// free the node and all his fathers that dont hava children
+/*  free the node and all his parents that dont hava children.  */
 void freeNodes(Node* node) {
-    Node* father = node->father;
-    int index = -1;
-    while (father != NULL && !haveChildren(node)) {
+    // save the parent of he node
+    Node* parent = node->parent;
+    int index;
+    while (parent != NULL && !haveChildren(node)) {
+        // save the index of the current node in his parent array of children.
         index = node->letter - 'a';
         free(node);
-        father->children[index] = NULL;
-        node = father;
-        father = father->father;
+        // set the child to null after free him.
+        parent->children[index] = NULL;
+        // go up one level.
+        node = parent;
+        parent = parent->parent;
     }
 }
 
