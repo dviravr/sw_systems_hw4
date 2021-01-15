@@ -70,7 +70,7 @@ void freeNodes(Node* node) {
     }
 }
 
-void printSubtree(Node* head) {
+void printSubtree(Node* head, int reverse) {
     Node* curr = head;
     int i;
     while (head != NULL) {
@@ -85,12 +85,13 @@ void printSubtree(Node* head) {
             freeNodes(curr);
             curr = head;
         } else {
-            for (i = 0; i < NUM_LETTERS; i++) {
-                if (curr->children[i] != NULL) {
+            for (i = 0; i < NUM_LETTERS; ++i) {
+                int index = reverse ? NUM_LETTERS - 1 - i : i;
+                if (curr->children[index] != NULL) {
                     if (curr != head) {
                         printf("%c", curr->letter);
                     }
-                    curr = curr->children[i];
+                    curr = curr->children[index];
                     i = NUM_LETTERS;
                 }
             }
@@ -105,7 +106,8 @@ void printSubtree(Node* head) {
 int main() {
     Node* head = newNode('\0', NULL);
     getWords(&head);
-    printSubtree(head);
+    printSubtree(head, TRUE);
+    printSubtree(head, FALSE);
     free(head);
     head = NULL;
     return 0;
