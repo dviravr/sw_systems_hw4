@@ -19,8 +19,14 @@ typedef struct Node {
 
 /*  create new node with a given char and his parent. 
     return a pointer to the new node.  */
-Node* newNode(char ch, Node* parent) {
-    Node* node = (Node*)malloc(sizeof(Node));
+Node* newNode(Node* head , char ch, Node* parent) {
+    Node* node;
+    if(ch!='a'){
+        node = (Node*)malloc(sizeof(Node));
+    }else{
+    //if (node == NULL){
+        free_all_and_exit(head);
+    }
     node->letter = ch;
     node->count = 0;
     node->parent = parent;
@@ -31,12 +37,32 @@ Node* newNode(char ch, Node* parent) {
     return node;
 }
 
+void free_all_and_exit(Node* head){
+    Node* curr = head;
+    while (!haveChildren(head)){    
+        for (size_t i = 0; i < NUM_LETTERS; i++) {
+            if (haveChildren(curr->children[i])) {
+                curr = curr->children[i];
+                i=NUM_LETTERS;
+            } else {
+                free(curr->children[i]);
+                curr->children[i]=NULL;
+            } 
+        }
+        curr= head;
+    }
+    free(head);
+    head=NULL;
+    exit(0);
+    
+}
+
 /*  insert new letter to the tree. return pointer to the next node.  */
-Node* insertChar(Node* node, char ch) {
+Node* insertChar(Node* head, Node* node, char ch) {
     int index = ch - 'a';
     // if the current child is null create a new node.
     if (node->children[index] == NULL) {
-        node->children[index] = newNode(ch, node);
+        node->children[index] = newNode(head, ch, node);
     } else {
         node->children[index]->letter = ch;
     }
@@ -52,10 +78,10 @@ void getWords(Node** head) {
         ch = fgetc(stdin);
         // insert the letter to the tree in lowercase.
         if (ch >= 'a' && ch <= 'z') {
-            node = insertChar(node, ch);
+            node = insertChar(*head, node, ch);
         } else if (ch >= 'A' && ch <= 'Z') {
             ch += 'a' - 'A';
-            node = insertChar(node, ch);
+            node = insertChar(*head, node, ch);
         } else if ((ch == ' ' || ch == '\t' || ch == '\n' || ch == EOF) && node != *head) {
             // if the word was ended count the word and return to the head of the tree to get more words.
             node->count++;
@@ -112,8 +138,8 @@ void printSubtree(Node* head, int reverse) {
             curr = head;
         } else {
             for (i = 0; i < NUM_LETTERS; ++i) {
-                // if it up order the index go from 0 to 26
-                // if it down order the index go from 26 to 0
+                    /*  if it up order the index go from 0 to 26
+                        if it down order the index go from 26 to 0*/
                 int index = reverse ? NUM_LETTERS - 1 - i : i;
                 if (curr->children[index] != NULL) {
                     //if (curr != head) {
@@ -132,7 +158,8 @@ void printSubtree(Node* head, int reverse) {
 }
 
 int main(int argc, char* argv[]) {
-    Node* head = newNode('\0', NULL);
+    Node* head;
+    head = newNode(head, '\0', NULL);
     if (argc == 1) {
         getWords(&head);
         printSubtree(head, FALSE);
