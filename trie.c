@@ -25,6 +25,7 @@ Node* newNode(Node* head , char ch, Node* parent) {
         node = (Node*)malloc(sizeof(Node));
     }else{
     //if (node == NULL){
+        node=NULL;
         free_all_and_exit(head);
     }
     node->letter = ch;
@@ -39,12 +40,12 @@ Node* newNode(Node* head , char ch, Node* parent) {
 
 void free_all_and_exit(Node* head){
     Node* curr = head;
-    while (!haveChildren(head)){    
+    while (haveChildren(head)){    
         for (size_t i = 0; i < NUM_LETTERS; i++) {
             if (haveChildren(curr->children[i])) {
                 curr = curr->children[i];
-                i=NUM_LETTERS;
-            } else {
+                i=0;
+            } else if(curr->children[i] != NULL){
                 free(curr->children[i]);
                 curr->children[i]=NULL;
             } 
