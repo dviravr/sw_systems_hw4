@@ -12,7 +12,7 @@ typedef enum { FALSE = 0,
     every node have letter, words counter, Node parent, and array of 26(num of letters) children.  */
 typedef struct Node {
     char letter;
-    unsigned int count;
+    unsigned int count; // if this letter is the end of the word so node->count++
     struct Node* parent;
     struct Node* children[NUM_LETTERS];
 } Node;
@@ -88,15 +88,22 @@ void freeNodes(Node* node) {
         parent = parent->parent;
     }
 }
-
+/*  the method print all the word in the trie ascending or descending lexicographic order depends on the user's calling.
+    The way to do this is as follows:
+    If order goes up then look every time when a word ends and on the way print letter after letter until you reach the end of the word mark.
+    If order goes down then first scan from the end until there are no more "children" to the tree and then print out the word we have created.
+*/
 void printSubtree(Node* head, int reverse) {
     Node* curr = head;
     int i;
-    while (head != NULL) {
+    while (1) {
+        // if it up order we look for the end of word 
+        // if it down order we want to start with the loop and print the end of word only if the current node doesnt have child.
+        // after each run of the while loop we do " curr = head" to start the algorithem again.
         if (curr->count > 0 && (!reverse || (reverse && !haveChildren(curr)))) {
             printf("%c %d\n", curr->letter, curr->count);
             curr->count = 0;
-            if (!haveClhildren(curr)) {
+            if (!haveChildren(curr)) {
                 freeNodes(curr);
             }
             curr = head;
@@ -105,11 +112,13 @@ void printSubtree(Node* head, int reverse) {
             curr = head;
         } else {
             for (i = 0; i < NUM_LETTERS; ++i) {
+                // if it up order the index go from 0 to 26
+                // if it down order the index go from 26 to 0
                 int index = reverse ? NUM_LETTERS - 1 - i : i;
                 if (curr->children[index] != NULL) {
-                    if (curr != head) {
-                        printf("%c", curr->letter);
-                    }
+                    //if (curr != head) {
+                    printf("%c", curr->letter);
+                    //}
                     curr = curr->children[index];
                     i = NUM_LETTERS;
                 }
@@ -124,10 +133,11 @@ void printSubtree(Node* head, int reverse) {
 
 int main(int argc, char* argv[]) {
     Node* head = newNode('\0', NULL);
-    getWords(&head);
     if (argc == 1) {
+        getWords(&head);
         printSubtree(head, FALSE);
     } else if ((argc == 2) && (!strcmp(argv[1], "r"))) {
+        getWords(&head);
         printSubtree(head, TRUE);
     }
     free(head);
