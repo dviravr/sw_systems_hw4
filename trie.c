@@ -77,7 +77,7 @@ void freeNodes(Node* node) {
     // save the parent of he node
     Node* parent = node->parent;
     int index;
-    while (parent != NULL && !haveChildren(node)) {
+    while (parent != NULL && node->count == 0 && !haveChildren(node)) {
         // save the index of the current node in his parent array of children.
         index = node->letter - 'a';
         free(node);
@@ -93,10 +93,10 @@ void printSubtree(Node* head, int reverse) {
     Node* curr = head;
     int i;
     while (head != NULL) {
-        if (curr->count > 0) {
+        if (curr->count > 0 && (!reverse || (reverse && !haveChildren(curr)))) {
             printf("%c %d\n", curr->letter, curr->count);
             curr->count = 0;
-            if (!haveChildren(curr)) {
+            if (!haveClhildren(curr)) {
                 freeNodes(curr);
             }
             curr = head;
@@ -122,47 +122,13 @@ void printSubtree(Node* head, int reverse) {
     }
 }
 
-void printSubtreeRev(Node* head, int reverse) {
-    Node* curr = head;
-    int i;
-    while (head != NULL) {
-        if ((curr->count > 0) && (!haveChildren(curr)) ) {
-            printf("%c %d\n", curr->letter, curr->count);
-            curr->count = 0;
-            if (!haveChildren(curr)) {
-                freeNodes(curr);
-            }
-            curr = head;
-        }else if (!haveChildren(curr)) {
-            freeNodes(curr);
-            curr = head;
-        } else {
-            for (i = NUM_LETTERS; i > 0 ; --i) {
-                //int index = reverse ? NUM_LETTERS - 1 - i : i;
-                if (curr->children[i] != NULL) {
-                        printf("%c", curr->letter);
-                    curr = curr->children[i];
-                    i = 0;
-                }
-            }
-        }
-        if (!haveChildren(head)) {
-            // finish print all the words
-            break;
-        }
-    }
-}
-
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     Node* head = newNode('\0', NULL);
     getWords(&head);
-    if(argc==1){
+    if (argc == 1) {
         printSubtree(head, FALSE);
-    }
-    else if ((argc == 2)&& (!strcmp(argv[1], "r")))
-    {
-        //dont work good!!!
-        printSubtreeRev(head, FALSE);
+    } else if ((argc == 2) && (!strcmp(argv[1], "r"))) {
+        printSubtree(head, TRUE);
     }
     free(head);
     head = NULL;
