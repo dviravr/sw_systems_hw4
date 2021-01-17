@@ -45,8 +45,10 @@ void freeNodes(Node* node) {
 void freeAllAndExit(Node* head) {
     Node* curr = head;
     while (haveChildren(head)) {
+        // reset the count for use in freeNodes.
         curr->count = 0;
         if (!haveChildren(curr)) {
+            // if the node don't have children free him and all above that dont have children.
             freeNodes(curr);
             curr = head;
         } else {
