@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 #define NUM_LETTERS 26
 
 typedef enum { FALSE = 0,
@@ -95,22 +97,7 @@ void printSubtree(Node* head, int reverse) {
             printf("%c %d\n", curr->letter, curr->count);
             curr->count = 0;
             if (!haveChildren(curr)) {
-<<<<<<< HEAD
-                // freeNodes(&curr);
-                for (i = 0; i < NUM_LETTERS; i++) {
-                    if (curr->father->children[i] == curr)
-                    {
-                        Node* temp = (curr ->father);
-                        free(curr);
-                        curr = temp;
-                        curr->children[i]= NULL;
-                        break;
-
-                    }
-                
-=======
                 freeNodes(curr);
->>>>>>> 8543441f5ee1149e1c83bdf27497d46f93dd3a17
             }
             curr = head;
         } else if (!haveChildren(curr)) {
@@ -133,19 +120,50 @@ void printSubtree(Node* head, int reverse) {
             break;
         }
     }
-<<<<<<< HEAD
-}}
-/*
-void printSubtree1(Node* head ,Node* curr, int index) {
-=======
 }
->>>>>>> 8543441f5ee1149e1c83bdf27497d46f93dd3a17
 
-int main() {
+void printSubtreeRev(Node* head, int reverse) {
+    Node* curr = head;
+    int i;
+    while (head != NULL) {
+        if ((curr->count > 0) && (!haveChildren(curr)) ) {
+            printf("%c %d\n", curr->letter, curr->count);
+            curr->count = 0;
+            if (!haveChildren(curr)) {
+                freeNodes(curr);
+            }
+            curr = head;
+        }else if (!haveChildren(curr)) {
+            freeNodes(curr);
+            curr = head;
+        } else {
+            for (i = NUM_LETTERS; i > 0 ; --i) {
+                //int index = reverse ? NUM_LETTERS - 1 - i : i;
+                if (curr->children[i] != NULL) {
+                        printf("%c", curr->letter);
+                    curr = curr->children[i];
+                    i = 0;
+                }
+            }
+        }
+        if (!haveChildren(head)) {
+            // finish print all the words
+            break;
+        }
+    }
+}
+
+int main(int argc, char *argv[]) {
     Node* head = newNode('\0', NULL);
     getWords(&head);
-    printSubtree(head, TRUE);
-    printSubtree(head, FALSE);
+    if(argc==1){
+        printSubtree(head, FALSE);
+    }
+    else if ((argc == 2)&& (!strcmp(argv[1], "r")))
+    {
+        //dont work good!!!
+        printSubtreeRev(head, FALSE);
+    }
     free(head);
     head = NULL;
     return 0;
