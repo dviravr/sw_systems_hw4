@@ -161,16 +161,13 @@ int main(int argc, char* argv[]) {
     if ((head = newNode('\0', NULL)) == NULL) {
         exit(EXIT_FAILURE);
     }
+    if (argc == 1) {
         getWords(&head);
-
-    freeAllAndExit(head);
-    // if (argc == 1) {
-    //     getWords(&head);
-    //     printSubtree(head, FALSE);
-    // } else if ((argc == 2) && (!strcmp(argv[1], "r"))) {
-    //     getWords(&head);
-    //     printSubtree(head, TRUE);
-    // }
+        printSubtree(head, FALSE);
+    } else if ((argc == 2) && (!strcmp(argv[1], "r"))) {
+        getWords(&head);
+        printSubtree(head, TRUE);
+    }
     free(head);
     head = NULL;
     return 0;
