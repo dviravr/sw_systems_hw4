@@ -147,7 +147,9 @@ void printSubtree(Node* head, int reverse) {
                         if it down order the index go from 26 to 0*/
                 int index = reverse ? NUM_LETTERS - 1 - i : i;
                 if (curr->children[index] != NULL) {
-                    printf("%c", curr->letter);
+                    if(curr!=head){ 
+                        printf("%c", curr->letter);
+                    }
                     curr = curr->children[index];
                     i = NUM_LETTERS;
                 }
